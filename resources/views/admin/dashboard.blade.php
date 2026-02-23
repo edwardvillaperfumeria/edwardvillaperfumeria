@@ -116,8 +116,8 @@
                         @foreach($topProducts as $product)
                             <div class="d-flex align-items-center mb-3">
                                 <div class="me-3">
-                                    @if($product->image)
-                                        <img src="{{ asset('storage/products/' . $product->image) }}" 
+                                    @if($product->image_url)
+                                        <img src="{{ $product->image_url }}" 
                                              alt="{{ $product->name }}" 
                                              class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                                     @else

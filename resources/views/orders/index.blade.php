@@ -44,6 +44,9 @@
                                         @case('delivered')
                                             Entregado
                                             @break
+                                        @case('paid')
+                                            Pagado
+                                            @break
                                         @case('cancelled')
                                             Cancelado
                                             @break
@@ -65,8 +68,8 @@
                                 <div class="col-md-6 mb-3">
                                     <div class="order-item">
                                         <div class="d-flex align-items-center">
-                                            @if($item->product->image)
-                                                <img src="{{ str_starts_with($item->product->image, 'http') ? $item->product->image : asset('storage/products/' . $item->product->image) }}"
+                                            @if($item->product->image_url)
+                                                <img src="{{ $item->product->image_url }}"
                                                      alt="{{ $item->product->name }}"
                                                      class="order-item-image">
                                             @else

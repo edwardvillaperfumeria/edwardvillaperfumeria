@@ -46,6 +46,9 @@
                                     @case('delivered')
                                         <i class="fas fa-check-circle me-1"></i>Entregado
                                         @break
+                                    @case('paid')
+                                        <i class="fas fa-check-double me-1"></i>Pagado
+                                        @break
                                     @case('cancelled')
                                         <i class="fas fa-times-circle me-1"></i>Cancelado
                                         @break
@@ -58,11 +61,11 @@
                         <!-- Status Progress -->
                         <div class="status-progress mt-3">
                             <div class="progress-steps">
-                                <div class="step {{ in_array($order->status, ['pending', 'processing', 'shipped', 'delivered']) ? 'active' : '' }}">
+                                <div class="step {{ in_array($order->status, ['pending', 'paid', 'processing', 'shipped', 'delivered']) ? 'active' : '' }}">
                                     <div class="step-icon">
                                         <i class="fas fa-shopping-cart"></i>
                                     </div>
-                                    <span>Pedido Realizado</span>
+                                    <span>{{ $order->status === 'paid' ? 'Pagado' : 'Pedido Realizado' }}</span>
                                 </div>
                                 <div class="step {{ in_array($order->status, ['processing', 'shipped', 'delivered']) ? 'active' : '' }}">
                                     <div class="step-icon">
@@ -93,8 +96,8 @@
                             <div class="order-item-detail">
                                 <div class="row align-items-center">
                                     <div class="col-md-2">
-                                        @if($item->product->image)
-                                            <img src="{{ asset('storage/products/' . $item->product->image) }}" 
+                                        @if($item->product->image_url)
+                                            <img src="{{ $item->product->image_url }}" 
                                                  alt="{{ $item->product->name }}" 
                                                  class="order-item-image">
                                         @else
