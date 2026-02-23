@@ -14,8 +14,8 @@ class ServicioCloudinary
 
     public function __construct()
     {
-        // Se configura el SDK usando la URL del .env
-        Configuration::instance(env('CLOUDINARY_URL'));
+        // Se configura el SDK usando el archivo de configuración config/cloudinary.php
+        Configuration::instance(config('cloudinary.url'));
         $this->apiSubida = new UploadApi();
     }
 
