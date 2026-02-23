@@ -277,12 +277,12 @@ class CheckoutController extends Controller
             $preference->items = $items;
 
             // Configurar URLs de retorno
-            // Nota: NO se envía auto_return para evitar la validación estricta back_url.success del API
             $preference->back_urls = (object) array(
                 "success" => route('checkout.success'),
                 "failure" => route('cart.index'),
                 "pending" => route('checkout.success')
             );
+            $preference->auto_return = "approved";
 
             // Configurar referencia externa (ID de la orden)
             $preference->external_reference = strval($order->id);
@@ -332,30 +332,57 @@ class CheckoutController extends Controller
      */
     public function success()
     {
-        // Verificar si hay una orden completada
-        if (!Session::has('checkout_order_id')) {
+        // Verificar si hay una orden en proceso en la sesión
+        $orderId = Session::get('checkout_order_id');
+        
+        // Si no hay orden en sesión, buscar por collection_id o external_reference de MP
+        if (!$orderId) {
+            $orderId = request()->query('external_reference');
+        }
+
+        if (!$orderId) {
             return redirect()->route('home')
                            ->with('error', 'No se encontró información de la orden.');
         }
 
-        $order = Order::findOrFail(Session::get('checkout_order_id'));
+        $order = Order::findOrFail($orderId);
 
         // Verificar parámetros de retorno de MercadoPago
         $collectionStatus = request()->query('collection_status');
+        $paymentId = request()->query('collection_id');
 
-        // Si MercadoPago confirma el pago aprobado, marcar como pagado
+        // Si MercadoPago confirma el pago aprobado por URL, marcar como pagado
         if ($collectionStatus === 'approved' && $order->status === 'pending') {
             $order->status = 'paid';
             $order->payment_method = request()->query('payment_type', 'mercadopago');
-            $order->payment_id = request()->query('collection_id', $order->payment_id);
+            if ($paymentId) {
+                $order->payment_id = $paymentId;
+            }
             $order->save();
+        } 
+        // Si no vienen parámetros pero la orden sigue pendiente, intentar consultar la API de MP
+        elseif ($order->status === 'pending' && $order->payment_id) {
+            try {
+                SDK::setAccessToken(config('services.mercadopago.access_token'));
+                // Si el payment_id en la orden es una preferencia, esto podría fallar si MP espera un payment_id real
+                // Sin embargo, si el usuario llega aquí es porque probablemente ya pagó
+                // Intentamos buscar el pago por la orden externa si es posible
+                
+                // Por ahora, si no hay confirmación explícita, dejamos que el webhook haga su trabajo
+                // Pero notificamos al usuario que su pedido se está procesando
+                \Log::info("Pedido #{$order->id} en success pero sin confirmación inmediata de MP.");
+            } catch (\Exception $e) {
+                \Log::error("Error consultando estado en success: " . $e->getMessage());
+            }
         }
         
-        // Limpiar el carrito del usuario
-        Cart::where('user_id', Auth::id())->delete();
-        
-        // Limpiar la sesión
-        Session::forget('checkout_order_id');
+        // Si la orden ya está pagada (por webhook o por URL), procedemos
+        if ($order->status === 'paid') {
+            // Limpiar el carrito del usuario
+            Cart::where('user_id', $order->user_id)->delete();
+            // Limpiar la sesión
+            Session::forget('checkout_order_id');
+        }
         
         return view('checkout.success', compact('order'));
     }
