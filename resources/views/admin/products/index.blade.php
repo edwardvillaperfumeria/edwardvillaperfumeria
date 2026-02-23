@@ -36,15 +36,9 @@
                             @foreach($products as $product)
                                 <tr>
                                     <td>
-                                        @if($product->image)
-                                            <img src="{{ asset('storage/products/' . $product->image) }}" 
-                                                 alt="{{ $product->name }}" 
-                                                 class="admin-product-image">
-                                        @else
-                                            <div class="admin-product-placeholder">
-                                                <i class="fas fa-image"></i>
-                                            </div>
-                                        @endif
+                                        <img src="{{ $product->image_url }}" 
+                                             alt="{{ $product->name }}" 
+                                             class="admin-product-image">
                                     </td>
                                     <td>
                                         <div>

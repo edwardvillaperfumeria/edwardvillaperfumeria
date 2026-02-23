@@ -118,15 +118,9 @@
                             <!-- Product Image with Overlay -->
                             <div class="product-image-container">
                                 <a href="{{ route('products.show', $product) }}" class="text-decoration-none">
-                                    @if($product->image)
-                                        <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset('storage/products/' . $product->image) }}"
-                                             alt="{{ $product->name }}"
-                                             class="product-image">
-                                    @else
-                                        <div class="product-image d-flex align-items-center justify-content-center bg-light">
-                                            <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
-                                        </div>
-                                    @endif
+                                    <img src="{{ $product->image_url }}"
+                                         alt="{{ $product->name }}"
+                                         class="product-image">
                                 </a>
                                 
                                 <!-- Stock Status Badge -->

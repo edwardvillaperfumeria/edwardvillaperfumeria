@@ -18,15 +18,9 @@
     <!-- Imagen del Producto -->
     <div class="col-lg-6 mb-3">
         <div class="detalle-imagen-contenedor">
-            @if($product->image)
-                <img src="{{ str_starts_with($product->image, 'http') ? $product->image : asset('storage/products/' . $product->image) }}"
-                     alt="{{ $product->name }}"
-                     class="detalle-imagen">
-            @else
-                <div class="detalle-imagen d-flex align-items-center justify-content-center">
-                    <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
-                </div>
-            @endif
+            <img src="{{ $product->image_url }}"
+                 alt="{{ $product->name }}"
+                 class="detalle-imagen">
 
             <!-- Badge de Stock sobre la imagen -->
             <div class="detalle-stock-badge">
@@ -183,15 +177,9 @@
                     <!-- Imagen del Producto con Overlay -->
                     <div class="product-image-container">
                         <a href="{{ route('products.show', $relatedProduct) }}" class="text-decoration-none">
-                            @if($relatedProduct->image)
-                                <img src="{{ str_starts_with($relatedProduct->image, 'http') ? $relatedProduct->image : asset('storage/products/' . $relatedProduct->image) }}"
-                                     alt="{{ $relatedProduct->name }}"
-                                     class="product-image">
-                            @else
-                                <div class="product-image d-flex align-items-center justify-content-center bg-light">
-                                    <i class="fas fa-image text-muted" style="font-size: 2rem;"></i>
-                                </div>
-                            @endif
+                            <img src="{{ $relatedProduct->image_url }}"
+                                 alt="{{ $relatedProduct->name }}"
+                                 class="product-image">
                         </a>
                         
                         <!-- Badge de Stock -->

@@ -13,12 +13,18 @@ use Illuminate\Support\Str;
 class ProductController extends Controller
 {
     /**
-     * Constructor para aplicar middleware
+     * Servicio de Cloudinary
      */
-    public function __construct()
+    protected $servicioCloudinary;
+
+    /**
+     * Constructor para aplicar middleware e inyectar servicios
+     */
+    public function __construct(\App\Services\ServicioCloudinary $servicioCloudinary)
     {
         $this->middleware('auth')->except(['index', 'show', 'search']);
         $this->middleware('admin')->except(['index', 'show', 'search']);
+        $this->servicioCloudinary = $servicioCloudinary;
     }
 
     /**
@@ -111,10 +117,8 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = time() . '_' . Str::slug($request->name) . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/products', $filename);
-            $validated['image'] = $filename;
+            $urlImagen = $this->servicioCloudinary->subirImagen($request->file('image')->getRealPath());
+            $validated['image'] = $urlImagen;
         }
 
         Product::create($validated);
@@ -182,15 +186,13 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Eliminar imagen anterior
+            // Eliminar imagen anterior de Cloudinary
             if ($product->image) {
-                Storage::delete('public/products/' . $product->image);
+                $this->servicioCloudinary->eliminarImagen($product->image);
             }
 
-            $image = $request->file('image');
-            $filename = time() . '_' . Str::slug($request->name) . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/products', $filename);
-            $validated['image'] = $filename;
+            $urlImagen = $this->servicioCloudinary->subirImagen($request->file('image')->getRealPath());
+            $validated['image'] = $urlImagen;
         }
 
         $product->update($validated);
@@ -211,7 +213,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         if ($product->image) {
-            Storage::delete('public/products/' . $product->image);
+            $this->servicioCloudinary->eliminarImagen($product->image);
         }
 
         $product->delete();

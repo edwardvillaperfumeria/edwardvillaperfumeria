@@ -68,11 +68,9 @@
                         @foreach($cartItems as $item)
                             <div class="order-item d-flex align-items-center py-3 border-bottom">
                                 <div class="item-image me-3">
-                                    @if($item->product->image)
-                                        <img src="{{ str_starts_with($item->product->image, 'http') ? $item->product->image : asset('storage/products/' . $item->product->image) }}"
-                                             alt="{{ $item->product->name }}"
-                                             class="img-fluid rounded" style="width: 50px; height: 50px; object-fit: cover;">
-                                    @endif
+                                    <img src="{{ $item->product->image_url }}"
+                                         alt="{{ $item->product->name }}"
+                                         class="img-fluid rounded" style="width: 50px; height: 50px; object-fit: cover;">
                                 </div>
                                 <div class="item-details flex-grow-1">
                                     <h6 class="mb-0">{{ $item->product->name }}</h6>

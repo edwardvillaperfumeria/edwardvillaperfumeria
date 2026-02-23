@@ -99,22 +99,22 @@ class Product extends Model
     }
 
     /**
-     * Obtiene la URL HTTPS de la imagen del producto.
-     * Si la imagen es una URL externa, fuerza HTTPS.
-     * Si es un nombre de archivo, genera la URL con asset().
+     * Obtiene la URL de la imagen del producto.
+     * Si la imagen es una URL (Cloudinary), la devuelve directamente.
+     * Si es un nombre de archivo (legacy), genera la URL local.
      */
     public function getImageUrlAttribute(): ?string
     {
         if (!$this->image) {
-            return null;
+            return asset('images/no-image.png'); // O una imagen por defecto
         }
 
-        // Si ya es una URL completa, asegurarse de que use HTTPS
-        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
-            return str_replace('http://', 'https://', $this->image);
+        // Si ya es una URL completa (Cloudinary), devolverla directamente
+        if (str_starts_with($this->image, 'http')) {
+            return $this->image;
         }
 
-        // Es un nombre de archivo, generar URL de storage
+        // Caso legacy: Es un nombre de archivo, generar URL de storage local
         return asset('storage/products/' . $this->image);
     }
 }

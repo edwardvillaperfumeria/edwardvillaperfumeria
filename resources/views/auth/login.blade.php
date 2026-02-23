@@ -190,7 +190,7 @@
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        padding: 4rem 1rem;
+        padding: 0rem 0.5rem;
         background-color: #fff;
     }
 

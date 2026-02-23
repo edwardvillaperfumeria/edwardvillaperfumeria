@@ -30,15 +30,9 @@
                                 <!-- Product Image -->
                                 <div class="col-3 col-md-2">
                                     <div class="cart-item-image">
-                                        @if($item->product->image)
-                                            <img src="{{ str_starts_with($item->product->image, 'http') ? $item->product->image : asset('storage/products/' . $item->product->image) }}"
-                                                 alt="{{ $item->product->name }}"
-                                                 class="img-fluid rounded">
-                                        @else
-                                            <div class="placeholder-image d-flex align-items-center justify-content-center bg-light rounded">
-                                                <i class="fas fa-image text-muted"></i>
-                                            </div>
-                                        @endif
+                                        <img src="{{ $item->product->image_url }}"
+                                             alt="{{ $item->product->name }}"
+                                             class="img-fluid rounded">
                                     </div>
                                 </div>
 
