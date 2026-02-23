@@ -102,17 +102,24 @@ CREATE TABLE IF NOT EXISTS cart (
 );
 
 -- Tabla de pedidos
--- Nota: status usa VARCHAR en lugar de ENUM para compatibilidad con PostgreSQL
--- Valores validos: 'pending', 'paid', 'shipped', 'delivered', 'cancelled'
 CREATE TABLE IF NOT EXISTS orders (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    country VARCHAR(2) NOT NULL DEFAULT 'CO',
+    postal_code VARCHAR(255) NULL,
+    notes TEXT NULL,
+    subtotal NUMERIC(10, 2) NOT NULL DEFAULT 0,
+    shipping NUMERIC(10, 2) NOT NULL DEFAULT 0,
     total NUMERIC(10, 2) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
-    shipping_address VARCHAR(255) NOT NULL,
-    shipping_city VARCHAR(255) NOT NULL,
-    shipping_phone VARCHAR(255) NOT NULL,
-    payment_method VARCHAR(255) NOT NULL,
+    payment_method VARCHAR(255) NULL,
+    payment_id VARCHAR(255) NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
     CONSTRAINT fk_orders_user FOREIGN KEY (user_id)
@@ -127,6 +134,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     product_id BIGINT NOT NULL,
     quantity INTEGER NOT NULL,
     price NUMERIC(10, 2) NOT NULL,
+    final_price NUMERIC(10, 2) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
     CONSTRAINT fk_order_items_order FOREIGN KEY (order_id)

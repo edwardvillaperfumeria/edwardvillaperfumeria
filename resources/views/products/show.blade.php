@@ -901,6 +901,21 @@
         }
     }
 </style>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cartForms = document.querySelectorAll('form[action*="cart/add"]');
+        cartForms.forEach(form => {
+            form.addEventListener('submit', function() {
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Agregando...';
+                }
+            });
+        });
+    });
+</script>
 @endpush
 
 @endsection

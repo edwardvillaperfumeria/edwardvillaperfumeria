@@ -686,6 +686,13 @@
             if (!isValid) {
                 e.preventDefault();
                 alert('Por favor, completa todos los campos requeridos.');
+            } else {
+                // Protección contra doble envío
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                }
             }
         });
         

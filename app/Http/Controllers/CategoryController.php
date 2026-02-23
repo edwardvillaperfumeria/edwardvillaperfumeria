@@ -52,34 +52,34 @@ class CategoryController extends Controller
     /**
      * Display the specified category (public view).
      */
-    public function show(Category $category)
+    public function show(Category $categoria)
     {
-        $products = Product::where('category_id', $category->id)
+        $productos = Product::where('category_id', $categoria->id)
                           ->where('stock', '>', 0)
                           ->latest()
                           ->paginate(12);
 
-        return view('categories.show', compact('category', 'products'));
+        return view('categories.show', compact('categoria', 'productos'));
     }
 
     /**
      * Show the form for editing the specified category.
      */
-    public function edit(Category $category)
+    public function edit(Category $categoria)
     {
-        return view('admin.categories.edit', compact('category'));
+        return view('admin.categories.edit', compact('categoria'));
     }
 
     /**
      * Update the specified category in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $categoria)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'name' => 'required|string|max:255|unique:categories,name,' . $categoria->id,
             'description' => 'nullable|string|max:500'
         ]);
-        $category->update([
+        $categoria->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description
@@ -95,15 +95,15 @@ class CategoryController extends Controller
     /**
      * Remove the specified category from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $categoria)
     {
         // Check if category has products
-        if ($category->products()->count() > 0) {
+        if ($categoria->products()->count() > 0) {
             return redirect()->route('admin.categorias.index')
                             ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
         }
 
-        $category->delete();
+        $categoria->delete();
 
         // Limpiar caché de la home
         Cache::forget('home_datos');

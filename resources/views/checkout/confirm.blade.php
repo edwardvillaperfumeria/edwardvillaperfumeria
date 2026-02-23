@@ -333,5 +333,20 @@
         }
     }
 </style>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const confirmForm = document.querySelector('form[action*="checkout/process"]');
+        if (confirmForm) {
+            confirmForm.addEventListener('submit', function() {
+                const btn = confirmForm.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando Pago...';
+                }
+            });
+        }
+    });
+</script>
 @endpush
 @endsection

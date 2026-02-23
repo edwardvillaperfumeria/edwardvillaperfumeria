@@ -40,7 +40,6 @@
                         <tr>
                             <th scope="col" class="ps-4">ID</th>
                             <th scope="col">Nombre</th>
-                            <th scope="col">Slug</th>
                             <th scope="col" class="text-center">Productos</th>
                             <th scope="col">Descripción</th>
                             <th scope="col" class="text-end pe-4">Acciones</th>
@@ -51,7 +50,6 @@
                             <tr>
                                 <td class="ps-4">{{ $category->id }}</td>
                                 <td>{{ $category->name }}</td>
-                                <td><code>{{ $category->slug }}</code></td>
                                 <td class="text-center">
                                     <span class="badge bg-info">{{ $category->products_count }}</span>
                                 </td>
