@@ -65,7 +65,7 @@ class ProductController extends Controller
         $direction = $request->get('direccion', 'asc');
         $query->orderBy($orderBy, $direction);
 
-        $products = $query->paginate(12);
+        $products = $query->get();
         $categories = Category::where('active', true)->get();
 
         return view('products.index', compact('products', 'categories'));

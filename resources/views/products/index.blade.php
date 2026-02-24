@@ -93,7 +93,7 @@
                         Nuestros Perfumes
                     @endif
                 </h1>
-                <p class="text-muted mb-0">{{ $products->total() }} productos encontrados</p>
+                <p class="text-muted mb-0">{{ $products->count() }} productos encontrados</p>
             </div>
             
             <!-- Sort Dropdown (Mobile) -->
@@ -194,10 +194,7 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center mt-5">
-                {{ $products->appends(request()->query())->links() }}
-            </div>
+
         @else
             <!-- No Products Found -->
             <div class="text-center py-5">
